@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Messi Effect — FC Barcelona</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --barca-red: #A50044;
+    --barca-blue: #004D98;
+    --gold: #EDBB00;
+    --dark: #0a0a0f;
+    --card: #111118;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 20% 50%, rgba(165,0,68,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 60% at 80% 50%, rgba(0,77,152,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 15vw, 180px);
+    line-height: 0.85;
+    letter-spacing: -2px;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-title .red { color: var(--barca-red); }
+  .hero-title .blue { color: var(--barca-blue); }
+  .hero-title .white { color: #fff; }
+
+  .hero-sub {
+    font-size: clamp(16px, 2.5vw, 22px);
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-sub em { color: var(--text); font-style: normal; font-weight: 700; }
+
+  .hero-stat {
+    display: flex;
+    gap: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .hero-stat-item { text-align: center; }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .hero-stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+  .scroll-hint span { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
+  .scroll-arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--muted), transparent); animation: scrollPulse 1.5s ease infinite; }
+
+  /* SECTIONS */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--barca-red);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 0.9;
+    margin-bottom: 48px;
+    letter-spacing: -1px;
+  }
+
+  /* TIMELINE CHART */
+  .chart-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chart-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--barca-red), var(--barca-blue));
+  }
+
+  .chart-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 240px;
+    position: relative;
+  }
+
+  .bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    justify-content: flex-end;
+    position: relative;
+  }
+
+  .bar-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    color: var(--text);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .bar-wrap:hover .bar-val { opacity: 1; }
+
+  .bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    cursor: pointer;
+    transform-origin: bottom;
+    transition: filter 0.2s ease, transform 0.2s ease;
+    animation: growUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform: scaleY(0);
+  }
+
+  .bar:hover { filter: brightness(1.3); transform: scaleY(1) translateY(-4px); }
+
+  .bar.messi { background: linear-gradient(to top, var(--barca-red), #e0005a); }
+  .bar.post { background: linear-gradient(to top, var(--barca-blue), #0068cc); }
+
+  .bar-season {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    margin-top: 8px;
+    white-space: nowrap;
+  }
+
+  .era-label {
+    position: absolute;
+    top: 0;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .era-messi { color: var(--barca-red); background: rgba(165,0,68,0.1); left: 0; }
+  .era-post { color: var(--barca-blue); background: rgba(0,77,152,0.1); right: 0; }
+
+  .divider-line {
+    position: absolute;
+    left: 63.5%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255,255,255,0.15);
+    z-index: 2;
+  }
+
+  .divider-line::after {
+    content: 'Messi se'n va →';
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .stat-card:hover { border-color: rgba(255,255,255,0.15); }
+
+  .stat-card .accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .stat-card.red .accent { background: var(--barca-red); }
+  .stat-card.blue .accent { background: var(--barca-blue); }
+  .stat-card.gold .accent { background: var(--gold); }
+
+  .stat-card-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .stat-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-card.red .stat-card-num { color: var(--barca-red); }
+  .stat-card.blue .stat-card-num { color: var(--barca-blue); }
+  .stat-card.gold .stat-card-num { color: var(--gold); }
+
+  .stat-card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .stat-card-desc strong { color: var(--text); font-weight: 700; }
+
+  /* COMPARISON */
+  .comparison {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 32px;
+  }
+
+  .comp-title {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .comp-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .comp-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .comp-era {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+  }
+
+  .comp-era.red { color: var(--barca-red); }
+  .comp-era.blue { color: var(--barca-blue); }
+
+  .comp-metric { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; text-align: center; }
+
+  .comp-bar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .comp-bar-row { display: flex; align-items: center; gap: 12px; }
+  .comp-bar-row.right { flex-direction: row-reverse; }
+
+  .comp-bar-fill {
+    height: 8px;
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+
+  .comp-bar-fill.red { background: var(--barca-red); }
+  .comp-bar-fill.blue { background: var(--barca-blue); }
+
+  .comp-bar-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    white-space: nowrap;
+  }
+
+  .comp-bar-val.red { color: var(--barca-red); }
+  .comp-bar-val.blue { color: var(--barca-blue); }
+
+  /* INSIGHT CARDS */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .insight-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 24px;
+    transition: transform 0.3s ease, border-color 0.3s;
+    cursor: default;
+  }
+
+  .insight-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .insight-emoji { font-size: 36px; margin-bottom: 16px; display: block; }
+
+  .insight-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .insight-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .insight-text strong { color: var(--text); }
+
+  /* QUOTE */
+  .quote-block {
+    border-left: 3px solid var(--barca-red);
+    padding: 24px 32px;
+    margin: 48px 0;
+    position: relative;
+  }
+
+  .quote-text {
+    font-size: clamp(20px, 3vw, 32px);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .quote-text strong { font-style: normal; font-weight: 700; color: var(--gold); }
+
+  .quote-author {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 16px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  footer strong { color: var(--text); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes growUp {
+    to { transform: scaleY(1); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 700px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .hero-stat { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-badge">FC Barcelona · La Liga · 2014–2025</p>
+  <h1 class="hero-title">
+    <span class="red">THE</span><br>
+    <span class="white">MESSI</span><br>
+    <span class="blue">EFFECT</span>
+  </h1>
+  <p class="hero-sub">
+    Quan un jugador val <em>41% dels teus gols</em>,<br>
+    el dia que se'n va, els números s'esfondren.
+  </p>
+  <div class="hero-stat">
+    <div class="hero-stat-item">
+      <div class="hero-stat-num">116</div>
+      <div class="hero-stat-label">Màxim gols · 2016-17</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="hero-stat-num">−41%</div>
+      <div class="hero-stat-label">Caiguda sense Messi</div>
+    </div>
+    <div class="hero-stat-item">
+      <div class="hero-stat-num">102</div>
+      <div class="hero-stat-label">Retorn · 2024-25</div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Explora</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</div>
+
+<!-- CHART SECTION -->
+<section>
+  <p class="section-label fade-in">01 — Les dades</p>
+  <h2 class="section-title fade-in">Gols per<br>temporada</h2>
+
+  <div class="chart-container fade-in">
+    <div class="chart-title">FC Barcelona · La Liga · Gols totals per temporada</div>
+    <div class="bar-chart" id="barChart">
+      <div class="divider-line"></div>
+      <span class="era-label era-messi">Era Messi 🐐</span>
+      <span class="era-label era-post">Post Messi</span>
+    </div>
+    <div style="display:flex; justify-content:center; gap:32px; margin-top:24px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:12px;height:12px;border-radius:2px;background:var(--barca-red);"></div>
+        <span style="font-size:12px;color:var(--muted);">Era Messi (2014–2021)</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:12px;height:12px;border-radius:2px;background:var(--barca-blue);"></div>
+        <span style="font-size:12px;color:var(--muted);">Post-Messi (2021–2025)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS SECTION -->
+<section style="padding-top: 0;">
+  <p class="section-label fade-in">02 — L'impacte</p>
+  <h2 class="section-title fade-in">Tres<br>números<br>que ho diuen tot</h2>
+
+  <div class="stats-grid fade-in">
+    <div class="stat-card red">
+      <div class="accent"></div>
+      <div class="stat-card-label">Davallada màxima</div>
+      <div class="stat-card-num">−48</div>
+      <div class="stat-card-desc">Gols menys el <strong>primer any sense Messi</strong>. De 116 a 68. El pitjor registre de la dècada.</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="accent"></div>
+      <div class="stat-card-label">Millor temporada Messi</div>
+      <div class="stat-card-num">116</div>
+      <div class="stat-card-desc">Gols el <strong>2016-17</strong>. La temporada més golejadora del Barça en tota la seva història recent.</div>
+    </div>
+    <div class="stat-card blue">
+      <div class="accent"></div>
+      <div class="stat-card-label">El rebrot</div>
+      <div class="stat-card-num">102</div>
+      <div class="stat-card-desc">Gols el <strong>2024-25</strong>. El Barça ha recuperat el nivell ofensiu, però amb una identitat totalment diferent.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section style="padding-top: 0;">
+  <p class="section-label fade-in">03 — La comparativa</p>
+  <h2 class="section-title fade-in">Era Messi<br>vs Post-Messi</h2>
+
+  <div class="comparison fade-in">
+    <div class="comp-title">Mitjana per temporada</div>
+
+    <!-- Goals -->
+    <div class="comp-row">
+      <div>
+        <div class="comp-era red">98.3</div>
+        <div class="comp-bar-row">
+          <div class="comp-bar-fill red" style="width:100%;"></div>
+        </div>
+      </div>
+      <div class="comp-metric">Gols<br>marcats</div>
+      <div>
+        <div class="comp-era blue" style="text-align:right;">80.3</div>
+        <div class="comp-bar-row right">
+          <div class="comp-bar-fill blue" style="width:82%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wins -->
+    <div class="comp-row">
+      <div>
+        <div class="comp-era red">70.3%</div>
+        <div class="comp-bar-row">
+          <div class="comp-bar-fill red" style="width:100%;"></div>
+        </div>
+      </div>
+      <div class="comp-metric">%<br>Victòries</div>
+      <div>
+        <div class="comp-era blue" style="text-align:right;">67.8%</div>
+        <div class="comp-bar-row right">
+          <div class="comp-bar-fill blue" style="width:96%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conceded -->
+    <div class="comp-row">
+      <div>
+        <div class="comp-era red">32.7</div>
+        <div class="comp-bar-row">
+          <div class="comp-bar-fill red" style="width:97%;"></div>
+        </div>
+      </div>
+      <div class="comp-metric">Gols<br>encaixats</div>
+      <div>
+        <div class="comp-era blue" style="text-align:right;">33.7</div>
+        <div class="comp-bar-row right">
+          <div class="comp-bar-fill blue" style="width:100%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-block fade-in">
+    <p class="quote-text">
+      "Les dades no menteixen. Quan Messi se'n va, el Barça perd <strong>gairebé 20 gols de mitjana</strong> per temporada. Però el que és sorprenent és que les victòries es mantenen... el sistema s'adapta."
+    </p>
+    <p class="quote-author">— Anàlisi · The Messi Effect Project</p>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section style="padding-top: 0;">
+  <p class="section-label fade-in">04 — Els insights</p>
+  <h2 class="section-title fade-in">Tres<br>conclusions</h2>
+
+  <div class="insights-grid fade-in">
+    <div class="insight-card">
+      <span class="insight-emoji">📉</span>
+      <div class="insight-title">El col·lapse instantani</div>
+      <p class="insight-text">El primer any sense Messi, el Barça va marcar <strong>48 gols menys</strong>. Cap altre equip de LaLiga ha patit una caiguda tan sobtada. La dependència era real.</p>
+    </div>
+    <div class="insight-card">
+      <span class="insight-emoji">🔄</span>
+      <div class="insight-title">La resiliència del sistema</div>
+      <p class="insight-text">Tot i la caiguda de gols, el <strong>% de victòries es va mantenir alt</strong>. El Barça va aprendre a guanyar defensant millor. Una adaptació tàctica notable.</p>
+    </div>
+    <div class="insight-card">
+      <span class="insight-emoji">🚀</span>
+      <div class="insight-title">El rebrot post-Messi</div>
+      <p class="insight-text">El 2024-25, amb <strong>102 gols</strong>, el Barça ha recuperat el nivell ofensiu. Però ara és un equip col·lectiu. Pedri, Yamal, Lewandowski. Ningú imprescindible.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--text);margin-bottom:8px;">THE MESSI EFFECT</p>
+  <p>Projecte d'anàlisi de dades · <strong>TKS</strong> · Python · Pandas · Matplotlib</p>
+  <p style="margin-top:8px;">Dataset: La Liga 2014–2025 · FC Barcelona</p>
+</footer>
+
+<script>
+const data = [
+  { season: '2014-15', goals: 110, era: 'messi' },
+  { season: '2015-16', goals: 112, era: 'messi' },
+  { season: '2016-17', goals: 116, era: 'messi' },
+  { season: '2017-18', goals: 99,  era: 'messi' },
+  { season: '2018-19', goals: 90,  era: 'messi' },
+  { season: '2019-20', goals: 86,  era: 'messi' },
+  { season: '2020-21', goals: 85,  era: 'messi' },
+  { season: '2021-22', goals: 68,  era: 'post' },
+  { season: '2022-23', goals: 70,  era: 'post' },
+  { season: '2023-24', goals: 79,  era: 'post' },
+  { season: '2024-25', goals: 102, era: 'post' },
+];
+
+const maxGoals = Math.max(...data.map(d => d.goals));
+const chart = document.getElementById('barChart');
+
+data.forEach((d, i) => {
+  const wrap = document.createElement('div');
+  wrap.className = 'bar-wrap';
+
+  const val = document.createElement('div');
+  val.className = 'bar-val';
+  val.textContent = d.goals;
+
+  const bar = document.createElement('div');
+  bar.className = `bar ${d.era}`;
+  const heightPct = (d.goals / maxGoals) * 100;
+  bar.style.height = `${heightPct * 1.8}px`;
+  bar.style.animationDelay = `${i * 0.08 + 0.3}s`;
+  bar.title = `${d.season}: ${d.goals} gols`;
+
+  const label = document.createElement('div');
+  label.className = 'bar-season';
+  label.textContent = d.season;
+
+  wrap.appendChild(val);
+  wrap.appendChild(bar);
+  wrap.appendChild(label);
+  chart.appendChild(wrap);
+});
+
+// Intersection Observer for fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
